@@ -115,7 +115,13 @@ export function OrderCard({
         <div className="px-3.5 pb-4">
           <div className="mb-2 text-base font-extrabold">{order.title}</div>
           <div className="rounded-lg border border-border bg-page px-3">
-            <DetailRow icon={User} label="Auftraggeber" value={order.client} />
+            <DetailRow
+              icon={User}
+              label="Auftraggeber"
+              value={
+                order.customerName ? `${order.client} · 🔗 ${order.customerName}` : order.client
+              }
+            />
             <DetailRow
               icon={Phone}
               label="Telefon"

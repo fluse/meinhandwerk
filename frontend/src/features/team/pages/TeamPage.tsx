@@ -31,9 +31,7 @@ export function TeamPage() {
   }))
 
   return (
-    <div className="mx-auto max-w-lg pb-10">
-      <h1 className="mb-4 text-lg font-bold text-ink">Team & Einstellungen</h1>
-
+    <div>
       {grouped.map((group) => (
         <div key={group.role} className="mb-4">
           <div className="mb-2 flex items-center gap-1.5 text-sm font-extrabold text-sage-deep">

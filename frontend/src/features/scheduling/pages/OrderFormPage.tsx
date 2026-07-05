@@ -31,6 +31,8 @@ export function OrderFormPage() {
         note: order.note,
         assigned: order.assigned,
         project: order.project,
+        customer: order.customer,
+        site: order.site,
       }
     : {
         title: searchParams.get('title') ?? '',
@@ -46,6 +48,8 @@ export function OrderFormPage() {
         note: searchParams.get('note') ?? '',
         assigned: searchParams.get('assigned') ? [searchParams.get('assigned')!] : [],
         project: searchParams.get('project') ?? '',
+        customer: searchParams.get('customer') ?? '',
+        site: searchParams.get('site') ?? '',
       }
 
   const goBack = () => navigate(-1)

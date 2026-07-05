@@ -42,6 +42,9 @@ export interface Order {
   assigned: string[]
   status: OrderStatus
   project: string
+  customer: string
+  customerName: string
+  site: string
   closedBy: string
   closedAt: string
   rapportSigned: boolean
@@ -66,6 +69,8 @@ export const orderFormSchema = z.object({
   assigned: z.array(z.string()),
   /** Gesetzt, wenn der Auftrag über "Projekt → Kalender einplanen" angelegt wird. */
   project: z.string().optional(),
+  customer: z.string().optional(),
+  site: z.string().optional(),
 })
 export type OrderFormInput = z.infer<typeof orderFormSchema>
 

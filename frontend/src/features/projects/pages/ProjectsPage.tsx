@@ -43,6 +43,8 @@ export function ProjectsPage() {
       desc: p.desc,
       note: p.projnr ? `TAIFUN-Nr: ${p.projnr}` : '',
       project: p.id,
+      customer: p.customer ?? '',
+      site: p.site ?? '',
     })
     navigate(`/orders/new?${params.toString()}`)
   }

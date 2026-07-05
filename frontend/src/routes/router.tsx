@@ -1,5 +1,6 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { AppLayout } from '@/core/layout/AppLayout'
+import { SettingsLayout } from '@/core/layout/SettingsLayout'
 import { LoginPage } from '@/features/auth/pages/LoginPage'
 import { TeamPage } from '@/features/team/pages/TeamPage'
 import { WeekPage } from '@/features/scheduling/pages/WeekPage'
@@ -11,6 +12,8 @@ import { CustomerFormPage } from '@/features/customers/pages/CustomerFormPage'
 import { ProjectsPage } from '@/features/projects/pages/ProjectsPage'
 import { ProjectFormPage } from '@/features/projects/pages/ProjectFormPage'
 import { PinboardPage } from '@/features/pinboard/pages/PinboardPage'
+import { VehiclesPage } from '@/features/vehicles/pages/VehiclesPage'
+import { VehicleSettingsPage } from '@/features/vehicles/pages/VehicleSettingsPage'
 import { EventsPage } from '@/features/events/pages/EventsPage'
 import { TimetrackingPage } from '@/features/timetracking/pages/TimetrackingPage'
 import { OrderRapportsPage } from '@/features/timetracking/pages/OrderRapportsPage'
@@ -35,6 +38,7 @@ export const router = createBrowserRouter([
           { path: 'customers', element: <CustomersPage /> },
           { path: 'projects', element: <ProjectsPage /> },
           { path: 'pinboard', element: <PinboardPage /> },
+          { path: 'vehicles', element: <VehiclesPage /> },
           { path: 'events', element: <EventsPage /> },
           { path: 'timetracking', element: <TimetrackingPage /> },
           { path: 'orders/:orderId/rapports', element: <OrderRapportsPage /> },
@@ -43,7 +47,15 @@ export const router = createBrowserRouter([
           {
             element: <RoleRoute allow={['chef', 'buero']} />,
             children: [
-              { path: 'team', element: <TeamPage /> },
+              {
+                path: 'settings',
+                element: <SettingsLayout />,
+                children: [
+                  { index: true, element: <Navigate to="team" replace /> },
+                  { path: 'team', element: <TeamPage /> },
+                  { path: 'vehicles', element: <VehicleSettingsPage /> },
+                ],
+              },
               { path: 'orders/new', element: <OrderFormPage /> },
               { path: 'orders/:orderId/edit', element: <OrderFormPage /> },
               { path: 'customers/new', element: <CustomerFormPage /> },

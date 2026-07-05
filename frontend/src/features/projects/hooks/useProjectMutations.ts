@@ -8,8 +8,18 @@ function useInvalidateProjects() {
   return () => queryClient.invalidateQueries({ queryKey: projectsQueryKey })
 }
 
+// Projekte können eine customer-Relation setzen/ändern/verlieren – die Rückschau auf der
+// Kundenkarte (core/hooks/useCustomerActivity.ts) muss das mitbekommen.
+function useInvalidateProjectsAndCustomerActivity() {
+  const queryClient = useQueryClient()
+  return () => {
+    queryClient.invalidateQueries({ queryKey: projectsQueryKey })
+    queryClient.invalidateQueries({ queryKey: ['customerActivity'] })
+  }
+}
+
 export function useCreateProject() {
-  const invalidate = useInvalidateProjects()
+  const invalidate = useInvalidateProjectsAndCustomerActivity()
   return useMutation({
     mutationFn: createProject,
     onSuccess: invalidate,
@@ -17,7 +27,7 @@ export function useCreateProject() {
 }
 
 export function useUpdateProject() {
-  const invalidate = useInvalidateProjects()
+  const invalidate = useInvalidateProjectsAndCustomerActivity()
   return useMutation({
     mutationFn: ({ id, input }: { id: string; input: ProjectFormInput }) =>
       updateProject(id, input),
@@ -26,7 +36,7 @@ export function useUpdateProject() {
 }
 
 export function useDeleteProject() {
-  const invalidate = useInvalidateProjects()
+  const invalidate = useInvalidateProjectsAndCustomerActivity()
   return useMutation({
     mutationFn: deleteProject,
     onSuccess: invalidate,

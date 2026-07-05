@@ -19,6 +19,9 @@ function toOrder(r: RecordModel): Order {
     assigned: r.assigned ?? [],
     status: r.status,
     project: r.project ?? '',
+    customer: r.customer ?? '',
+    customerName: r.expand?.customer?.name ?? '',
+    site: r.site ?? '',
     closedBy: r.closedBy ?? '',
     closedAt: r.closedAt ?? '',
     rapportSigned: !!r.rapportSigned,
@@ -31,12 +34,13 @@ export async function listOrdersInRange(fromISO: string, toISO: string): Promise
   const records = await pb.collection('orders').getFullList({
     filter: pb.filter('date >= {:from} && date <= {:to}', { from: fromISO, to: toISO }),
     sort: 'from',
+    expand: 'customer',
   })
   return records.map(toOrder)
 }
 
 export async function getOrder(id: string): Promise<Order> {
-  return toOrder(await pb.collection('orders').getOne(id))
+  return toOrder(await pb.collection('orders').getOne(id, { expand: 'customer' }))
 }
 
 function toPayload(input: OrderFormInput) {
@@ -54,6 +58,8 @@ function toPayload(input: OrderFormInput) {
     note: input.note ?? '',
     assigned: input.assigned,
     project: input.project ?? '',
+    customer: input.customer ?? '',
+    site: input.site ?? '',
   }
 }
 

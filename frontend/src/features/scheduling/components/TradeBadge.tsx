@@ -1,5 +1,43 @@
+import {
+  Droplet,
+  Eye,
+  Flame,
+  Hammer,
+  Palmtree,
+  Snowflake,
+  Syringe,
+  Zap,
+  type LucideIcon,
+} from 'lucide-react'
 import { colorVar } from '@/core/lib/cssVar'
 import { TRADES, type Trade } from '../types/order'
+
+export const TRADE_ICONS: Record<Trade, LucideIcon> = {
+  heizung: Flame,
+  sanitaer: Droplet,
+  elektro: Zap,
+  klima: Snowflake,
+  innenausbau: Hammer,
+  besichtigung: Eye,
+  urlaub: Palmtree,
+  krank: Syringe,
+}
+
+export function TradeIcon({ trade, size = 14 }: { trade: Trade; size?: number }) {
+  const Icon = TRADE_ICONS[trade]
+  // lucide setzt den color-Prop als rohes SVG-stroke-Attribut – darin löst der Browser
+  // CSS-Custom-Properties (var(...)) nicht zuverlässig auf (Icon wird unsichtbar/transparent).
+  // Über style.color + das lucide-Default stroke="currentColor" läuft die Auflösung stattdessen
+  // durch die normale CSS-Kaskade, wo var() zuverlässig funktioniert.
+  return (
+    <Icon
+      size={size}
+      style={{
+        color: colorVar(trade === 'innenausbau' ? 'trade-innenausbau-dot' : `trade-${trade}`),
+      }}
+    />
+  )
+}
 
 export function TradeBadge({ trade }: { trade: Trade }) {
   return (
@@ -14,16 +52,5 @@ export function TradeBadge({ trade }: { trade: Trade }) {
     >
       {TRADES[trade]}
     </span>
-  )
-}
-
-export function TradeDot({ trade }: { trade: Trade }) {
-  return (
-    <span
-      className="inline-block h-2.5 w-2.5 flex-none rounded-[3px]"
-      style={{
-        background: colorVar(trade === 'innenausbau' ? 'trade-innenausbau-dot' : `trade-${trade}`),
-      }}
-    />
   )
 }

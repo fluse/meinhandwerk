@@ -14,6 +14,8 @@ function toCustomer(r: RecordModel): Customer {
     phone: r.phone ?? '',
     email: r.email ?? '',
     notes: r.notes ?? '',
+    lat: typeof r.lat === 'number' && r.lat !== 0 ? r.lat : null,
+    lng: typeof r.lng === 'number' && r.lng !== 0 ? r.lng : null,
   }
 }
 

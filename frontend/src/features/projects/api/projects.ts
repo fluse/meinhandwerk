@@ -17,6 +17,9 @@ function toProject(r: RecordModel): Project {
     desc: r.desc ?? '',
     status: r.status,
     scheduledOrder: r.scheduledOrder ?? '',
+    customer: r.customer ?? '',
+    customerName: r.expand?.customer?.name ?? '',
+    site: r.site ?? '',
   }
 }
 
@@ -40,16 +43,18 @@ function toPayload(input: ProjectFormInput) {
     date: input.date ?? '',
     desc: input.desc ?? '',
     status: input.status,
+    customer: input.customer ?? '',
+    site: input.site ?? '',
   }
 }
 
 export async function listProjects(): Promise<Project[]> {
-  const records = await pb.collection('projects').getFullList({ sort: 'title' })
+  const records = await pb.collection('projects').getFullList({ sort: 'title', expand: 'customer' })
   return records.map(toProject)
 }
 
 export async function getProject(id: string): Promise<Project> {
-  return toProject(await pb.collection('projects').getOne(id))
+  return toProject(await pb.collection('projects').getOne(id, { expand: 'customer' }))
 }
 
 export async function createProject(input: ProjectFormInput): Promise<Project> {

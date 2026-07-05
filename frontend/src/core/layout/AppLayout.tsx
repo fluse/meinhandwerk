@@ -21,9 +21,9 @@ export function AppLayout() {
           <div className="flex flex-none items-center gap-3">
             {canPlan && (
               <Link
-                to="/team"
-                title="Team & Einstellungen"
-                aria-label="Team & Einstellungen"
+                to="/settings"
+                title="Einstellungen"
+                aria-label="Einstellungen"
                 className="text-sage-deep"
               >
                 <Settings size={20} />

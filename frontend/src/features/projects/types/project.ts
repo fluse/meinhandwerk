@@ -23,6 +23,9 @@ export interface Project {
   desc: string
   status: ProjectStatus
   scheduledOrder: string
+  customer: string
+  customerName: string
+  site: string
 }
 
 export const projectFormSchema = z.object({
@@ -37,5 +40,7 @@ export const projectFormSchema = z.object({
   date: z.string().optional(),
   desc: z.string().optional(),
   status: z.enum(PROJECT_STATUS_VALUES),
+  customer: z.string().optional(),
+  site: z.string().optional(),
 })
 export type ProjectFormInput = z.infer<typeof projectFormSchema>

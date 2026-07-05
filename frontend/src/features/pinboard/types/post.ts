@@ -1,4 +1,12 @@
-import { HelpCircle, type LucideIcon, Megaphone, Sparkles, ThumbsUp, Truck, Wrench } from 'lucide-react'
+import {
+  HelpCircle,
+  type LucideIcon,
+  Megaphone,
+  Sparkles,
+  ThumbsUp,
+  Truck,
+  Wrench,
+} from 'lucide-react'
 import { z } from 'zod'
 
 export const CATEGORY_VALUES = [

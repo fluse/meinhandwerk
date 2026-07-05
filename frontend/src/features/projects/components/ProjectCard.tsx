@@ -57,7 +57,11 @@ export function ProjectCard({ project: p, canPlan, onSchedule, onEdit }: Project
       {open && (
         <div className="px-3.5 pb-3.5">
           <div className="rounded-lg border border-border bg-page px-3">
-            <DetailRow icon={User} label="Kunde" value={p.client} />
+            <DetailRow
+              icon={User}
+              label="Kunde"
+              value={p.customerName ? `${p.client} · 🔗 ${p.customerName}` : p.client}
+            />
             <DetailRow
               icon={MapPin}
               label="Adresse"

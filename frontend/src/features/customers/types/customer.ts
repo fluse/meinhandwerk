@@ -11,8 +11,12 @@ export interface Customer {
   phone: string
   email: string
   notes: string
+  lat: number | null
+  lng: number | null
 }
 
+// lat/lng werden serverseitig (pb_hooks) aus der Adresse aufgelöst und sind bewusst nicht
+// Teil des Formulars – der Nutzer setzt sie nie manuell.
 export const customerFormSchema = z
   .object({
     kdnr: z.string().optional(),

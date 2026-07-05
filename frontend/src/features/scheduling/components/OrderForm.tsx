@@ -1,13 +1,15 @@
+import type { ChangeEventHandler } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Check, Plus } from 'lucide-react'
 import { ROLE_VALUES, ROLES } from '@/core/lib/roles'
 import { Button } from '@/core/components/Button'
 import type { RosterMember } from '@/core/api/roster'
+import { useCustomerLookup } from '@/core/hooks/useCustomerLookup'
+import { useCustomerSites } from '@/core/hooks/useCustomerSites'
 import { useCreateOrder, useUpdateOrder } from '../hooks/useOrderMutations'
-import { useCustomerLookup } from '../hooks/useCustomerLookup'
 import { orderFormSchema, TRADE_VALUES, TRADES, type OrderFormInput } from '../types/order'
-import { TradeDot } from './TradeBadge'
+import { TradeIcon } from './TradeBadge'
 
 const fieldClass =
   'w-full rounded-md border border-border px-3 py-2 text-sm focus:border-sage focus:outline-none'
@@ -30,13 +32,34 @@ export function OrderForm({ orderId, defaultValues, roster, onDone, onCancel }: 
     control,
     getValues,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<OrderFormInput>({
     resolver: zodResolver(orderFormSchema),
     defaultValues,
   })
 
-  const { onChange: onClientChange, ...clientField } = register('client')
+  const customerId = watch('customer')
+  const { data: sites = [] } = useCustomerSites(customerId ?? '')
+
+  const { onChange: onCustomerChange, ...customerField } = register('customer')
+  const handleCustomerChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
+    onCustomerChange(e)
+    setValue('site', '')
+    const match = customers.find((cu) => cu.id === e.target.value)
+    if (match) {
+      if (!getValues('client')) setValue('client', match.label)
+      if (!getValues('phone') && match.phone) setValue('phone', match.phone)
+      if (!getValues('address') && match.address) setValue('address', match.address)
+    }
+  }
+
+  const { onChange: onSiteChange, ...siteField } = register('site')
+  const handleSiteChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
+    onSiteChange(e)
+    const match = sites.find((s) => s.id === e.target.value)
+    if (match) setValue('address', match.address)
+  }
 
   const grouped = ROLE_VALUES.map((role) => ({
     role,
@@ -85,7 +108,7 @@ export function OrderForm({ orderId, defaultValues, roster, onDone, onCancel }: 
                     field.value === trade ? 'border-sage bg-page' : 'border-border'
                   }`}
                 >
-                  <TradeDot trade={trade} />
+                  <TradeIcon trade={trade} />
                   {TRADES[trade]}
                 </button>
               ))}
@@ -118,29 +141,50 @@ export function OrderForm({ orderId, defaultValues, roster, onDone, onCancel }: 
       </div>
 
       <div className="mb-3 flex flex-col gap-1">
+        <label className="text-xs font-medium text-muted" htmlFor="customer">
+          Kunde (optional)
+        </label>
+        <select
+          id="customer"
+          className={fieldClass}
+          {...customerField}
+          onChange={handleCustomerChange}
+        >
+          <option value="">— Kein Kunde / Freitext —</option>
+          {customers.map((cu) => (
+            <option key={cu.id} value={cu.id}>
+              {cu.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {customerId && (
+        <div className="mb-3 flex flex-col gap-1">
+          <label className="text-xs font-medium text-muted" htmlFor="site">
+            Baustelle (optional)
+          </label>
+          <select id="site" className={fieldClass} {...siteField} onChange={handleSiteChange}>
+            <option value="">— Kundenadresse verwenden —</option>
+            {sites.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      <div className="mb-3 flex flex-col gap-1">
         <label className="text-xs font-medium text-muted" htmlFor="client">
           Auftraggeber
         </label>
         <input
           id="client"
-          list="customerlist"
           className={fieldClass}
           placeholder="Nachname / Firma"
-          {...clientField}
-          onChange={(e) => {
-            onClientChange(e)
-            const match = customers.find((c) => c.label === e.target.value)
-            if (match) {
-              if (!getValues('phone') && match.phone) setValue('phone', match.phone)
-              if (!getValues('address') && match.address) setValue('address', match.address)
-            }
-          }}
+          {...register('client')}
         />
-        <datalist id="customerlist">
-          {customers.map((c) => (
-            <option key={c.id} value={c.label} />
-          ))}
-        </datalist>
       </div>
 
       <div className="mb-3 flex flex-col gap-1">

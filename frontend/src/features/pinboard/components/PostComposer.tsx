@@ -5,7 +5,11 @@ import { Button } from '@/core/components/Button'
 import { useCreatePost } from '../hooks/usePostMutations'
 import { CATEGORIES, CATEGORY_VALUES, type Category } from '../types/post'
 
-export function PostComposer() {
+interface PostComposerProps {
+  onClose: () => void
+}
+
+export function PostComposer({ onClose }: PostComposerProps) {
   const { user } = useAuth()
   const create = useCreatePost()
   const [text, setText] = useState('')
@@ -33,19 +37,16 @@ export function PostComposer() {
     setError('')
     create.mutate(
       { authorId: user?.id ?? '', text: text.trim(), category, file: file ?? undefined },
-      {
-        onSuccess: () => {
-          setText('')
-          setCategory('info')
-          clearFile()
-        },
-      },
+      { onSuccess: onClose },
     )
   }
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-3.5">
-      <textarea
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40">
+      <div className="max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-t-2xl bg-card p-5">
+        <div className="mx-auto mb-3.5 h-1 w-10 rounded-full bg-border" />
+        <h2 className="mb-3.5 text-lg font-extrabold text-ink">Beitrag erstellen</h2>
+        <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Was gibt's? z. B. „Wer hat den 18V-Akku aus dem Sprinter?“"
@@ -98,9 +99,13 @@ export function PostComposer() {
           className="hidden"
         />
         <div className="flex-1" />
+        <Button variant="secondary" onClick={onClose}>
+          Abbrechen
+        </Button>
         <Button disabled={create.isPending} onClick={submit}>
           Posten
         </Button>
+      </div>
       </div>
     </div>
   )

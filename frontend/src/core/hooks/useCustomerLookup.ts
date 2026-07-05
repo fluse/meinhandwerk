@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { listCustomerLookup } from '../api/customerLookup'
+import { listCustomerLookup } from '@/core/api/customerLookup'
 
 export function useCustomerLookup() {
   return useQuery({

@@ -1,8 +1,11 @@
 import { useState } from 'react'
+import type { ChangeEventHandler } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/core/components/Button'
 import { ConfirmDialog } from '@/core/components/ConfirmDialog'
+import { useCustomerLookup } from '@/core/hooks/useCustomerLookup'
+import { useCustomerSites } from '@/core/hooks/useCustomerSites'
 import {
   PROJECT_STATUS_LABELS,
   PROJECT_STATUS_VALUES,
@@ -11,7 +14,6 @@ import {
   type ProjectFormInput,
 } from '../types/project'
 import { useCreateProject, useDeleteProject, useUpdateProject } from '../hooks/useProjectMutations'
-import { useCustomerLookup } from '../hooks/useCustomerLookup'
 
 const fieldClass =
   'w-full rounded-md border border-border px-3 py-2 text-sm focus:border-sage focus:outline-none'
@@ -26,12 +28,15 @@ export function ProjectForm({ project, onDone, onCancel }: ProjectFormProps) {
   const create = useCreateProject()
   const update = useUpdateProject()
   const del = useDeleteProject()
-  const { data: customerNames = [] } = useCustomerLookup()
+  const { data: customers = [] } = useCustomerLookup()
   const [confirmDelete, setConfirmDelete] = useState(false)
   const {
     register,
     handleSubmit,
     control,
+    getValues,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm<ProjectFormInput>({
     resolver: zodResolver(projectFormSchema),
@@ -49,8 +54,38 @@ export function ProjectForm({ project, onDone, onCancel }: ProjectFormProps) {
           date: '',
           desc: '',
           status: 'offen',
+          customer: '',
+          site: '',
         },
   })
+
+  const customerId = watch('customer')
+  const { data: sites = [] } = useCustomerSites(customerId ?? '')
+
+  const { onChange: onCustomerChange, ...customerField } = register('customer')
+  const handleCustomerChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
+    onCustomerChange(e)
+    setValue('site', '')
+    const match = customers.find((cu) => cu.id === e.target.value)
+    if (match) {
+      if (!getValues('client')) setValue('client', match.label)
+      if (!getValues('phone') && match.phone) setValue('phone', match.phone)
+      if (!getValues('street') && match.street) setValue('street', match.street)
+      if (!getValues('zip') && match.zip) setValue('zip', match.zip)
+      if (!getValues('city') && match.city) setValue('city', match.city)
+    }
+  }
+
+  const { onChange: onSiteChange, ...siteField } = register('site')
+  const handleSiteChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
+    onSiteChange(e)
+    const match = sites.find((s) => s.id === e.target.value)
+    if (match) {
+      setValue('street', match.street)
+      setValue('zip', match.zip)
+      setValue('city', match.city)
+    }
+  }
 
   const onSubmit = (input: ProjectFormInput) => {
     if (project) {
@@ -85,21 +120,50 @@ export function ProjectForm({ project, onDone, onCancel }: ProjectFormProps) {
       </div>
 
       <div className="mb-3 flex flex-col gap-1">
+        <label className="text-xs font-medium text-muted" htmlFor="customer">
+          Kunde (optional)
+        </label>
+        <select
+          id="customer"
+          className={fieldClass}
+          {...customerField}
+          onChange={handleCustomerChange}
+        >
+          <option value="">— Kein Kunde / Freitext —</option>
+          {customers.map((cu) => (
+            <option key={cu.id} value={cu.id}>
+              {cu.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {customerId && (
+        <div className="mb-3 flex flex-col gap-1">
+          <label className="text-xs font-medium text-muted" htmlFor="site">
+            Baustelle (optional)
+          </label>
+          <select id="site" className={fieldClass} {...siteField} onChange={handleSiteChange}>
+            <option value="">— Kundenadresse verwenden —</option>
+            {sites.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      <div className="mb-3 flex flex-col gap-1">
         <label className="text-xs font-medium text-muted" htmlFor="client">
-          Kunde
+          Name / Firma
         </label>
         <input
           id="client"
-          list="projectcustomerlist"
           className={fieldClass}
           placeholder="Name / Firma"
           {...register('client')}
         />
-        <datalist id="projectcustomerlist">
-          {customerNames.map((name) => (
-            <option key={name} value={name} />
-          ))}
-        </datalist>
       </div>
 
       <div className="mb-3 flex flex-col gap-1">

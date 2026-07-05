@@ -1,6 +1,8 @@
 import { useState } from 'react'
+import { Plus } from 'lucide-react'
 import { useAuth } from '@/core/auth/AuthProvider'
 import { useRoster } from '@/core/hooks/useRoster'
+import { Button } from '@/core/components/Button'
 import { usePosts } from '../hooks/usePosts'
 import { useDeletePost } from '../hooks/usePostMutations'
 import { PostComposer } from '../components/PostComposer'
@@ -13,6 +15,7 @@ export function PinboardPage() {
   const { data: roster = [] } = useRoster()
   const deletePost = useDeletePost()
   const [filter, setFilter] = useState<'alle' | Category>('alle')
+  const [composerOpen, setComposerOpen] = useState(false)
 
   const filtered = posts.filter((p) => filter === 'alle' || p.category === filter)
   const sorted = [...filtered].sort(
@@ -25,7 +28,10 @@ export function PinboardPage() {
     <div className="mx-auto max-w-lg pb-16">
       <h1 className="mb-3 text-lg font-bold text-ink">Pinnwand</h1>
 
-      <PostComposer />
+      <Button className="w-full" onClick={() => setComposerOpen(true)}>
+        <Plus size={16} className="mr-1.5 inline-block align-text-bottom" />
+        Beitrag erstellen
+      </Button>
 
       <div className="my-3 flex gap-1.5 overflow-x-auto pb-1">
         <button
@@ -37,18 +43,22 @@ export function PinboardPage() {
         >
           Alle
         </button>
-        {CATEGORY_VALUES.map((k) => (
-          <button
-            key={k}
-            type="button"
-            onClick={() => setFilter(k)}
-            className={`whitespace-nowrap rounded-full border px-3 py-1.5 text-xs font-semibold ${
-              filter === k ? 'border-sage bg-page text-sage-deep' : 'border-border text-muted'
-            }`}
-          >
-            {CATEGORIES[k].icon} {CATEGORIES[k].label}
-          </button>
-        ))}
+        {CATEGORY_VALUES.map((k) => {
+          const Icon = CATEGORIES[k].icon
+          return (
+            <button
+              key={k}
+              type="button"
+              onClick={() => setFilter(k)}
+              className={`inline-flex items-center gap-1 whitespace-nowrap rounded-full border px-3 py-1.5 text-xs font-semibold ${
+                filter === k ? 'border-sage bg-page text-sage-deep' : 'border-border text-muted'
+              }`}
+            >
+              <Icon size={13} />
+              {CATEGORIES[k].label}
+            </button>
+          )
+        })}
       </div>
 
       {isLoading ? (
@@ -69,6 +79,8 @@ export function PinboardPage() {
           />
         ))
       )}
+
+      {composerOpen && <PostComposer onClose={() => setComposerOpen(false)} />}
     </div>
   )
 }
