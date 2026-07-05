@@ -4,6 +4,7 @@ import { SettingsLayout } from '@/core/layout/SettingsLayout'
 import { LoginPage } from '@/features/auth/pages/LoginPage'
 import { TeamPage } from '@/features/team/pages/TeamPage'
 import { GeneralSettingsPage } from '@/features/settings/pages/GeneralSettingsPage'
+import { HomePage } from '@/features/home/pages/HomePage'
 import { DayBoardPage } from '@/features/scheduling/pages/DayBoardPage'
 import { WeekPage } from '@/features/scheduling/pages/WeekPage'
 import { OrdersListPage } from '@/features/scheduling/pages/OrdersListPage'
@@ -34,7 +35,8 @@ export const router = createBrowserRouter([
       {
         element: <AppLayout />,
         children: [
-          { index: true, element: <DayBoardPage /> },
+          { index: true, element: <HomePage /> },
+          { path: 'einsatzplan', element: <DayBoardPage /> },
           { path: 'week', element: <WeekPage /> },
           { path: 'week/:userId', element: <EmployeeWeekPage /> },
           { path: 'auftraege', element: <OrdersListPage /> },

@@ -6,6 +6,7 @@ import {
   Clock,
   Flag,
   Folder,
+  Home,
   ListChecks,
   type LucideIcon,
   MoreHorizontal,
@@ -20,18 +21,18 @@ interface Tab {
   match: (pathname: string) => boolean
 }
 
-// Die 6 Haupt-Tabs aus MIGRATIONSPLAN.md Abschnitt 4 (analog TABS/NAVMAP der Vorlage).
-// "Team" ist – wie in der Vorlage – bewusst kein Bottom-Tab, sondern ein Icon im
+// "Team" ist bewusst kein Bottom-Tab, sondern ein Icon im
 // Header (siehe AppLayout).
 // Nur die ersten PRIMARY_COUNT Tabs stehen direkt in der Bottom Nav, der Rest
 // landet gesammelt hinter dem "Mehr"-Tab – so bleibt die Leiste auch bei
 // weiteren Menüpunkten mobil-tauglich.
 const TABS: Tab[] = [
+  { to: '/', label: 'Start', icon: Home, match: (p) => p === '/' },
   {
-    to: '/',
+    to: '/einsatzplan',
     label: 'Kalender',
     icon: Calendar,
-    match: (p) => p === '/' || p.startsWith('/week') || p.startsWith('/orders'),
+    match: (p) => p.startsWith('/einsatzplan') || p.startsWith('/week') || p.startsWith('/orders'),
   },
   { to: '/projects', label: 'Projekte', icon: Folder, match: (p) => p.startsWith('/projects') },
   {
@@ -40,7 +41,6 @@ const TABS: Tab[] = [
     icon: Clock,
     match: (p) => p.startsWith('/timetracking'),
   },
-  { to: '/customers', label: 'Kunden', icon: Users, match: (p) => p.startsWith('/customers') },
   { to: '/pinboard', label: 'Pinnwand', icon: Pin, match: (p) => p.startsWith('/pinboard') },
   { to: '/events', label: 'Events', icon: Flag, match: (p) => p.startsWith('/events') },
   { to: '/vehicles', label: 'Fahrzeuge', icon: Car, match: (p) => p.startsWith('/vehicles') },
@@ -50,6 +50,7 @@ const TABS: Tab[] = [
     icon: ListChecks,
     match: (p) => p.startsWith('/auftraege'),
   },
+  { to: '/customers', label: 'Kunden', icon: Users, match: (p) => p.startsWith('/customers') },
 ]
 
 const PRIMARY_COUNT = 4
