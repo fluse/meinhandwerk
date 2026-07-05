@@ -41,41 +41,43 @@ export function AddVehicleForm() {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="mt-1.5 flex flex-col gap-2 rounded-xl border border-border bg-card p-3.5"
-    >
-      <div className="mb-1 text-sm font-extrabold text-sage-deep">Fahrzeug hinzufügen</div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex w-full max-w-sm flex-col gap-2 rounded-lg bg-card p-5 shadow-xl"
+      >
+        <div className="mb-1 text-sm font-extrabold text-sage-deep">Fahrzeug hinzufügen</div>
 
-      <input
-        placeholder="Name (z. B. Sprinter 1)"
-        className="rounded-md border border-border px-3 py-2 text-sm focus:border-sage focus:outline-none"
-        {...register('name')}
-      />
-      {errors.name && <p className="text-xs text-danger">{errors.name.message}</p>}
+        <input
+          placeholder="Name (z. B. Sprinter 1)"
+          className="rounded-md border border-border px-3 py-2 text-sm focus:border-sage focus:outline-none"
+          {...register('name')}
+        />
+        {errors.name && <p className="text-xs text-danger">{errors.name.message}</p>}
 
-      <input
-        placeholder="Kennzeichen (optional)"
-        className="rounded-md border border-border px-3 py-2 text-sm focus:border-sage focus:outline-none"
-        {...register('plate')}
-      />
+        <input
+          placeholder="Kennzeichen (optional)"
+          className="rounded-md border border-border px-3 py-2 text-sm focus:border-sage focus:outline-none"
+          {...register('plate')}
+        />
 
-      <textarea
-        placeholder="Notizen (optional)"
-        className="min-h-[60px] resize-y rounded-md border border-border px-3 py-2 text-sm focus:border-sage focus:outline-none"
-        {...register('notes')}
-      />
+        <textarea
+          placeholder="Notizen (optional)"
+          className="min-h-[60px] resize-y rounded-md border border-border px-3 py-2 text-sm focus:border-sage focus:outline-none"
+          {...register('notes')}
+        />
 
-      {error && <p className="text-xs text-danger">Fahrzeug konnte nicht angelegt werden.</p>}
+        {error && <p className="text-xs text-danger">Fahrzeug konnte nicht angelegt werden.</p>}
 
-      <div className="mt-1 flex gap-2">
-        <Button type="submit" disabled={isPending}>
-          {isPending ? 'Wird angelegt…' : 'Hinzufügen'}
-        </Button>
-        <Button type="button" variant="secondary" onClick={() => setOpen(false)}>
-          Abbrechen
-        </Button>
-      </div>
-    </form>
+        <div className="mt-1 flex justify-end gap-2">
+          <Button type="button" variant="secondary" onClick={() => setOpen(false)}>
+            Abbrechen
+          </Button>
+          <Button type="submit" disabled={isPending}>
+            {isPending ? 'Wird angelegt…' : 'Hinzufügen'}
+          </Button>
+        </div>
+      </form>
+    </div>
   )
 }

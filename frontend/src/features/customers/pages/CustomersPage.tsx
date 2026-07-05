@@ -54,7 +54,7 @@ export function CustomersPage() {
         className="w-full rounded-md border border-border px-3 py-2 text-sm focus:border-sage focus:outline-none"
       />
 
-      <div className="mt-2 text-xs text-muted">
+      <div className="mt-2 pl-2 text-xs text-muted">
         {customers.length} Kunde{customers.length === 1 ? '' : 'n'} gespeichert
       </div>
 
@@ -65,7 +65,7 @@ export function CustomersPage() {
           Noch keine Kunden. {canPlan ? 'Lege einen an.' : 'Bitte Chef/Büro fragen.'}
         </div>
       ) : (
-        <div className="mt-3">
+        <div className="mt-5">
           {list.map((c) => (
             <CustomerCard
               key={c.id}

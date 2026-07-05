@@ -1,3 +1,4 @@
+import { Pencil, Trash2 } from 'lucide-react'
 import type { Vehicle } from '../types/vehicle'
 
 interface VehicleAdminRowProps {
@@ -17,20 +18,24 @@ export function VehicleAdminRow({ vehicle: v, onEdit, onDelete }: VehicleAdminRo
         <div className="text-sm font-semibold text-ink">{v.name}</div>
         <div className="truncate text-xs text-muted">{info}</div>
       </div>
-      <button
-        type="button"
-        onClick={onEdit}
-        className="cursor-pointer text-xs font-bold text-sage-deep hover:underline"
-      >
-        Bearbeiten
-      </button>
-      <button
-        type="button"
-        onClick={onDelete}
-        className="cursor-pointer text-xs font-semibold text-danger hover:underline"
-      >
-        Entfernen
-      </button>
+      <div className="flex flex-none items-center gap-4">
+        <button
+          type="button"
+          onClick={onEdit}
+          title="Fahrzeug bearbeiten"
+          className="cursor-pointer text-sage-deep"
+        >
+          <Pencil size={15} />
+        </button>
+        <button
+          type="button"
+          onClick={onDelete}
+          title="Fahrzeug entfernen"
+          className="cursor-pointer text-danger"
+        >
+          <Trash2 size={15} />
+        </button>
+      </div>
     </div>
   )
 }

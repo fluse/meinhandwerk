@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { LocateFixed, MapPin, Navigation, User } from 'lucide-react'
+import { LocateFixed, MapPin, Navigation, Pencil, Trash2, User } from 'lucide-react'
 import { Button } from '@/core/components/Button'
 import { DetailRow } from '@/core/components/DetailRow'
 import { ConfirmDialog } from '@/core/components/ConfirmDialog'
@@ -161,13 +161,23 @@ export function VehicleCard({
           )}
 
           {canPlan && (
-            <div className="mt-2.5 flex flex-wrap gap-2">
-              <Button variant="secondary" className="flex-1" onClick={onEdit}>
-                Bearbeiten
-              </Button>
-              <Button variant="danger" className="flex-1" onClick={() => setConfirmDelete(true)}>
-                Löschen
-              </Button>
+            <div className="mt-2.5 flex items-center justify-end gap-4">
+              <button
+                type="button"
+                onClick={onEdit}
+                title="Fahrzeug bearbeiten"
+                className="cursor-pointer text-sage-deep"
+              >
+                <Pencil size={17} />
+              </button>
+              <button
+                type="button"
+                onClick={() => setConfirmDelete(true)}
+                title="Fahrzeug löschen"
+                className="cursor-pointer text-danger"
+              >
+                <Trash2 size={17} />
+              </button>
             </div>
           )}
         </div>

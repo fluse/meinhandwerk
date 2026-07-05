@@ -1,3 +1,4 @@
+import { Pencil, Trash2 } from 'lucide-react'
 import type { TeamMember } from '../types/member'
 
 interface MemberCardProps {
@@ -19,22 +20,26 @@ export function MemberCard({ member, isSelf, onEdit, onDelete }: MemberCardProps
         </div>
         <div className="truncate text-xs text-muted">{contact || 'kein Kontakt hinterlegt'}</div>
       </div>
-      <button
-        type="button"
-        onClick={onEdit}
-        className="text-xs font-bold cursor-pointer text-sage-deep hover:underline"
-      >
-        Bearbeiten
-      </button>
-      {!isSelf && (
+      <div className="flex flex-none items-center gap-4">
         <button
           type="button"
-          onClick={onDelete}
-          className="text-xs cursor-pointer font-semibold text-danger hover:underline"
+          onClick={onEdit}
+          title="Mitarbeiter bearbeiten"
+          className="cursor-pointer text-sage-deep"
         >
-          Entfernen
+          <Pencil size={15} />
         </button>
-      )}
+        {!isSelf && (
+          <button
+            type="button"
+            onClick={onDelete}
+            title="Mitarbeiter entfernen"
+            className="cursor-pointer text-danger"
+          >
+            <Trash2 size={15} />
+          </button>
+        )}
+      </div>
     </div>
   )
 }

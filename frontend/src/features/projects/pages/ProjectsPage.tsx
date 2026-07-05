@@ -51,7 +51,7 @@ export function ProjectsPage() {
 
   return (
     <div className="mx-auto max-w-lg pb-16">
-      <div className="mb-3 flex items-center justify-between gap-2">
+      <div className="mb-5 flex items-center justify-between gap-2">
         <h1 className="text-lg font-bold text-ink">Projekte</h1>
         {canPlan && (
           <Button onClick={() => navigate('/projects/new')}>
