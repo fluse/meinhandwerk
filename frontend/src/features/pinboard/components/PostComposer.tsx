@@ -47,65 +47,65 @@ export function PostComposer({ onClose }: PostComposerProps) {
         <div className="mx-auto mb-3.5 h-1 w-10 rounded-full bg-border" />
         <h2 className="mb-3.5 text-lg font-extrabold text-ink">Beitrag erstellen</h2>
         <textarea
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="Was gibt's? z. B. „Wer hat den 18V-Akku aus dem Sprinter?“"
-        className="mb-2.5 min-h-[58px] w-full resize-y rounded-md border border-border px-3 py-2 text-sm focus:border-sage focus:outline-none"
-      />
-      <div className="mb-2.5 flex flex-wrap gap-1.5">
-        {CATEGORY_VALUES.map((k) => {
-          const Icon = CATEGORIES[k].icon
-          return (
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="Was gibt's? z. B. „Wer hat den 18V-Akku aus dem Sprinter?“"
+          className="mb-2.5 min-h-[58px] w-full resize-y rounded-md border border-border px-3 py-2 text-sm focus:border-sage focus:outline-none"
+        />
+        <div className="mb-2.5 flex flex-wrap gap-1.5">
+          {CATEGORY_VALUES.map((k) => {
+            const Icon = CATEGORIES[k].icon
+            return (
+              <button
+                key={k}
+                type="button"
+                onClick={() => setCategory(k)}
+                className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1.5 text-xs font-semibold ${
+                  category === k ? 'border-sage bg-page text-sage-deep' : 'border-border text-muted'
+                }`}
+              >
+                <Icon size={13} />
+                {CATEGORIES[k].label}
+              </button>
+            )
+          })}
+        </div>
+        {preview && (
+          <div className="relative mb-2.5 inline-block">
+            <img src={preview} alt="" className="max-h-32 rounded-lg border border-border" />
             <button
-              key={k}
               type="button"
-              onClick={() => setCategory(k)}
-              className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1.5 text-xs font-semibold ${
-                category === k ? 'border-sage bg-page text-sage-deep' : 'border-border text-muted'
-              }`}
+              onClick={clearFile}
+              className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-md bg-black/55 text-xs text-white"
             >
-              <Icon size={13} />
-              {CATEGORIES[k].label}
+              <X size={14} />
             </button>
-          )
-        })}
-      </div>
-      {preview && (
-        <div className="relative mb-2.5 inline-block">
-          <img src={preview} alt="" className="max-h-32 rounded-lg border border-border" />
+          </div>
+        )}
+        {error && <p className="mb-2 text-xs text-danger">{error}</p>}
+        <div className="flex items-center gap-2">
           <button
             type="button"
-            onClick={clearFile}
-            className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-md bg-black/55 text-xs text-white"
+            onClick={() => fileRef.current?.click()}
+            className="flex items-center gap-1 rounded-full border border-border px-3 py-2 text-xs font-semibold text-muted"
           >
-            <X size={14} />
+            <Camera size={14} /> Foto
           </button>
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            onChange={(e) => pickFile(e.target.files?.[0] ?? null)}
+            className="hidden"
+          />
+          <div className="flex-1" />
+          <Button variant="secondary" onClick={onClose}>
+            Abbrechen
+          </Button>
+          <Button disabled={create.isPending} onClick={submit}>
+            Posten
+          </Button>
         </div>
-      )}
-      {error && <p className="mb-2 text-xs text-danger">{error}</p>}
-      <div className="flex items-center gap-2">
-        <button
-          type="button"
-          onClick={() => fileRef.current?.click()}
-          className="flex items-center gap-1 rounded-full border border-border px-3 py-2 text-xs font-semibold text-muted"
-        >
-          <Camera size={14} /> Foto
-        </button>
-        <input
-          ref={fileRef}
-          type="file"
-          accept="image/*"
-          onChange={(e) => pickFile(e.target.files?.[0] ?? null)}
-          className="hidden"
-        />
-        <div className="flex-1" />
-        <Button variant="secondary" onClick={onClose}>
-          Abbrechen
-        </Button>
-        <Button disabled={create.isPending} onClick={submit}>
-          Posten
-        </Button>
-      </div>
       </div>
     </div>
   )

@@ -1,14 +1,8 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/core/components/Button'
-import { ConfirmDialog } from '@/core/components/ConfirmDialog'
-import { useState } from 'react'
 import { customerFormSchema, type Customer, type CustomerFormInput } from '../types/customer'
-import {
-  useCreateCustomer,
-  useDeleteCustomer,
-  useUpdateCustomer,
-} from '../hooks/useCustomerMutations'
+import { useCreateCustomer, useUpdateCustomer } from '../hooks/useCustomerMutations'
 
 const fieldClass =
   'w-full rounded-md border border-border px-3 py-2 text-sm focus:border-sage focus:outline-none'
@@ -22,8 +16,6 @@ interface CustomerFormProps {
 export function CustomerForm({ customer, onDone, onCancel }: CustomerFormProps) {
   const create = useCreateCustomer()
   const update = useUpdateCustomer()
-  const del = useDeleteCustomer()
-  const [confirmDelete, setConfirmDelete] = useState(false)
   const {
     register,
     handleSubmit,
@@ -153,29 +145,6 @@ export function CustomerForm({ customer, onDone, onCancel }: CustomerFormProps) 
           {customer ? 'Speichern' : 'Anlegen'}
         </Button>
       </div>
-
-      {customer && (
-        <Button
-          type="button"
-          variant="danger"
-          className="mt-2.5 w-full"
-          onClick={() => setConfirmDelete(true)}
-        >
-          Kunde löschen
-        </Button>
-      )}
-
-      <ConfirmDialog
-        open={confirmDelete}
-        title="Kunde löschen?"
-        description="Dieser Vorgang kann nicht rückgängig gemacht werden."
-        confirmLabel="Löschen"
-        onCancel={() => setConfirmDelete(false)}
-        onConfirm={() => {
-          if (customer) del.mutate(customer.id, { onSuccess: onDone })
-          setConfirmDelete(false)
-        }}
-      />
     </form>
   )
 }

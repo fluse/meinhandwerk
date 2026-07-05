@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Building2, Mail, MapPin, Phone, Plus, StickyNote, User } from 'lucide-react'
+import { Building2, Mail, MapPin, Phone, Plus, StickyNote, Trash2, User } from 'lucide-react'
 import { Button } from '@/core/components/Button'
 import { DetailRow } from '@/core/components/DetailRow'
 import { ConfirmDialog } from '@/core/components/ConfirmDialog'
@@ -143,9 +143,14 @@ export function CustomerCard({
               <Button variant="secondary" className="flex-1" onClick={onEdit}>
                 Bearbeiten
               </Button>
-              <Button variant="danger" className="flex-1" onClick={() => setConfirmDelete(true)}>
-                Löschen
-              </Button>
+              <button
+                type="button"
+                onClick={() => setConfirmDelete(true)}
+                title="Kunde löschen"
+                className="cursor-pointer rounded-md border border-border px-3 text-danger hover:bg-red-50"
+              >
+                <Trash2 size={16} />
+              </button>
             </div>
           )}
         </div>

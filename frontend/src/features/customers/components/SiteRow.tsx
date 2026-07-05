@@ -1,3 +1,4 @@
+import { Pencil, Trash2 } from 'lucide-react'
 import type { Site } from '../types/site'
 
 interface SiteRowProps {
@@ -15,20 +16,24 @@ export function SiteRow({ site: s, onEdit, onDelete }: SiteRowProps) {
         <div className="text-sm font-semibold text-ink">{s.label || address || 'Baustelle'}</div>
         {s.label && address && <div className="truncate text-xs text-muted">{address}</div>}
       </div>
-      <button
-        type="button"
-        onClick={onEdit}
-        className="cursor-pointer text-xs font-bold text-sage-deep hover:underline"
-      >
-        Bearbeiten
-      </button>
-      <button
-        type="button"
-        onClick={onDelete}
-        className="cursor-pointer text-xs font-semibold text-danger hover:underline"
-      >
-        Entfernen
-      </button>
+      <div className="flex flex-none items-center gap-4">
+        <button
+          type="button"
+          onClick={onEdit}
+          title="Baustelle bearbeiten"
+          className="cursor-pointer text-sage-deep"
+        >
+          <Pencil size={15} />
+        </button>
+        <button
+          type="button"
+          onClick={onDelete}
+          title="Baustelle entfernen"
+          className="cursor-pointer text-danger"
+        >
+          <Trash2 size={15} />
+        </button>
+      </div>
     </div>
   )
 }

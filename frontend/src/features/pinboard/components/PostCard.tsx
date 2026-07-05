@@ -11,6 +11,7 @@ import { CATEGORIES, RESOLVABLE, type Post } from '../types/post'
 import { CommentBox } from './CommentBox'
 
 function ago(iso: string): string {
+  if (!iso || Number.isNaN(new Date(iso).getTime())) return ''
   const seconds = (Date.now() - new Date(iso).getTime()) / 1000
   if (seconds < 60) return 'gerade eben'
   if (seconds < 3600) return `vor ${Math.floor(seconds / 60)} Min`
@@ -66,7 +67,8 @@ export function PostCard({ post: p, roster, currentUserId, canPlan, onDelete }: 
         <div className="min-w-0 flex-1">
           <div className="text-sm font-bold">{author?.name ?? 'Unbekannt'}</div>
           <div className="text-xs text-muted">
-            {author && ROLES[author.role].label} · {ago(p.created)}
+            {author && ROLES[author.role].label}
+            {ago(p.created) && ` · ${ago(p.created)}`}
           </div>
         </div>
         <span
@@ -151,8 +153,10 @@ export function PostCard({ post: p, roster, currentUserId, canPlan, onDelete }: 
                 {commentAuthor && <RoleIcon role={commentAuthor.role} size={22} />}
                 <div className="flex-1 rounded-lg bg-page px-2.5 py-1.5">
                   <div className="text-xs font-bold">
-                    {commentAuthor?.name ?? 'Unbekannt'}{' '}
-                    <span className="font-medium text-muted">· {ago(c.created)}</span>
+                    {commentAuthor?.name ?? 'Unbekannt'}
+                    {ago(c.created) && (
+                      <span className="font-medium text-muted"> · {ago(c.created)}</span>
+                    )}
                   </div>
                   <div className="whitespace-pre-wrap text-sm">{c.text}</div>
                 </div>

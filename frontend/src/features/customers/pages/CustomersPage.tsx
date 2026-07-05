@@ -37,7 +37,15 @@ export function CustomersPage() {
 
   return (
     <div className="mx-auto max-w-lg pb-16">
-      <h1 className="mb-3 text-lg font-bold text-ink">Kunden</h1>
+      <div className="mb-3 flex items-center justify-between gap-2">
+        <h1 className="text-lg font-bold text-ink">Kunden</h1>
+        {canPlan && (
+          <Button onClick={() => navigate('/customers/new')}>
+            <Plus size={16} className="mr-1.5 inline-block align-text-bottom" />
+            Neuer Kunde
+          </Button>
+        )}
+      </div>
 
       <input
         value={search}
@@ -45,15 +53,6 @@ export function CustomersPage() {
         placeholder="Suchen: Name, Ort, Kd-Nr, Telefon"
         className="w-full rounded-md border border-border px-3 py-2 text-sm focus:border-sage focus:outline-none"
       />
-
-      {canPlan && (
-        <div className="mt-2.5">
-          <Button className="w-full" onClick={() => navigate('/customers/new')}>
-            <Plus size={16} className="mr-1.5 inline-block align-text-bottom" />
-            Neuer Kunde
-          </Button>
-        </div>
-      )}
 
       <div className="mt-2 text-xs text-muted">
         {customers.length} Kunde{customers.length === 1 ? '' : 'n'} gespeichert

@@ -26,12 +26,13 @@ export function PinboardPage() {
 
   return (
     <div className="mx-auto max-w-lg pb-16">
-      <h1 className="mb-3 text-lg font-bold text-ink">Pinnwand</h1>
-
-      <Button className="w-full" onClick={() => setComposerOpen(true)}>
-        <Plus size={16} className="mr-1.5 inline-block align-text-bottom" />
-        Beitrag erstellen
-      </Button>
+      <div className="mb-3 flex items-center justify-between gap-2">
+        <h1 className="text-lg font-bold text-ink">Pinnwand</h1>
+        <Button onClick={() => setComposerOpen(true)}>
+          <Plus size={16} className="mr-1.5 inline-block align-text-bottom" />
+          Beitrag erstellen
+        </Button>
+      </div>
 
       <div className="my-3 flex gap-1.5 overflow-x-auto pb-1">
         <button

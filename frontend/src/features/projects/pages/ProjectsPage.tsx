@@ -51,16 +51,15 @@ export function ProjectsPage() {
 
   return (
     <div className="mx-auto max-w-lg pb-16">
-      <h1 className="mb-3 text-lg font-bold text-ink">Projekte</h1>
-
-      {canPlan && (
-        <div className="mb-2.5">
-          <Button className="w-full" onClick={() => navigate('/projects/new')}>
+      <div className="mb-3 flex items-center justify-between gap-2">
+        <h1 className="text-lg font-bold text-ink">Projekte</h1>
+        {canPlan && (
+          <Button onClick={() => navigate('/projects/new')}>
             <Plus size={16} className="mr-1.5 inline-block align-text-bottom" />
             Neues Projekt
           </Button>
-        </div>
-      )}
+        )}
+      </div>
 
       <div className="mb-3 flex gap-1.5 overflow-x-auto pb-1">
         {FILTERS.map(([key, label]) => (

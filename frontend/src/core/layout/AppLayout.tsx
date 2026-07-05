@@ -1,7 +1,6 @@
-import { Settings } from 'lucide-react'
+import { LogOut, Settings } from 'lucide-react'
 import { Link, Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/core/auth/AuthProvider'
-import { Button } from '@/core/components/Button'
 import { BottomNav } from './BottomNav'
 
 export function AppLayout() {
@@ -14,8 +13,8 @@ export function AppLayout() {
   }
 
   return (
-    <div className="flex min-h-svh flex-col bg-page">
-      <header className="flex items-center justify-between gap-3 border-b border-border bg-card px-4 py-3">
+    <div className="flex min-h-dvh flex-col bg-page">
+      <header className="sticky top-0 z-20 flex items-center justify-between gap-3 border-b border-border bg-card px-4 py-3">
         <span className="truncate text-base font-semibold text-ink">Hahn Energie & Bau</span>
         {user && (
           <div className="flex flex-none items-center gap-3">
@@ -32,9 +31,15 @@ export function AppLayout() {
             <span className="hidden max-w-[40vw] truncate text-sm text-muted sm:inline">
               {user.email}
             </span>
-            <Button variant="secondary" onClick={handleLogout}>
-              Abmelden
-            </Button>
+            <button
+              type="button"
+              onClick={handleLogout}
+              title="Abmelden"
+              aria-label="Abmelden"
+              className="cursor-pointer text-sage-deep hover:text-danger"
+            >
+              <LogOut size={20} />
+            </button>
           </div>
         )}
       </header>
