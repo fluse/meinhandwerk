@@ -24,7 +24,7 @@ onRecordCreate((e) => {
           'https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' +
           encodeURIComponent(address),
         method: 'GET',
-        headers: { 'User-Agent': 'Handwerkerkalender/1.0' },
+        headers: { 'User-Agent': 'MeinHandwerk/1.0' },
         timeout: 10,
       })
       const results = res.statusCode === 200 ? res.json : null
@@ -67,7 +67,7 @@ onRecordUpdate((e) => {
           'https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' +
           encodeURIComponent(address),
         method: 'GET',
-        headers: { 'User-Agent': 'Handwerkerkalender/1.0' },
+        headers: { 'User-Agent': 'MeinHandwerk/1.0' },
         timeout: 10,
       })
       const results = res.statusCode === 200 ? res.json : null

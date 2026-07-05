@@ -29,9 +29,9 @@ export function LoginPage() {
           </div>
         )}
         <h1 className="text-xl font-bold text-ink">
-          {companySettings?.companyName ?? 'Handwerkerkalender'}
+          {companySettings?.companyName ?? 'MeinHandwerk'}
         </h1>
-        <p className="mt-1 text-sm text-muted">Handwerkerkalender</p>
+        <p className="mt-1 text-sm text-muted">MeinHandwerk</p>
 
         <div className="mt-7 w-full rounded-2xl border border-border bg-card p-6 shadow-lg shadow-black/[0.03] sm:p-7">
           <LoginForm onSuccess={() => navigate('/', { replace: true })} />

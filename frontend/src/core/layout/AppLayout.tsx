@@ -28,7 +28,7 @@ export function AppLayout() {
               className="h-7 w-7 flex-none object-contain"
             />
           )}
-          <span className="truncate">{companySettings?.companyName ?? 'Handwerkerkalender'}</span>
+          <span className="truncate">{companySettings?.companyName ?? 'MeinHandwerk'}</span>
         </Link>
         {user && (
           <div className="flex flex-none items-center gap-3">

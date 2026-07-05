@@ -1,6 +1,6 @@
 # Frontend
 
-React + TypeScript + Vite app for the Handwerkerkalender. See the root [README](../README.md) for how this fits together with the PocketBase backend and Docker.
+React + TypeScript + Vite app for the MeinHandwerk. See the root [README](../README.md) for how this fits together with the PocketBase backend and Docker.
 
 ## Commands
 
