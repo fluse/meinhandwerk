@@ -22,5 +22,9 @@ export const editMemberSchema = z.object({
   name: z.string().min(1, 'Name ist erforderlich.'),
   role: z.enum(ROLE_VALUES),
   phone: z.string().optional(),
+  password: z.union([
+    z.literal(''),
+    z.string().min(8, 'Das Passwort muss mindestens 8 Zeichen lang sein.'),
+  ]),
 })
 export type EditMemberInput = z.infer<typeof editMemberSchema>

@@ -31,7 +31,13 @@ export async function createMember(input: CreateMemberInput): Promise<TeamMember
 }
 
 export async function updateMember(id: string, input: EditMemberInput): Promise<TeamMember> {
-  const record = await pb.collection('users').update(id, input)
+  const { password, ...rest } = input
+  const payload: Record<string, unknown> = { ...rest }
+  if (password) {
+    payload.password = password
+    payload.passwordConfirm = password
+  }
+  const record = await pb.collection('users').update(id, payload)
   return toMember(record)
 }
 

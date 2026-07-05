@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Eye, EyeOff } from 'lucide-react'
 import { ROLES, ROLE_VALUES } from '@/core/lib/roles'
 import { Button } from '@/core/components/Button'
 import { editMemberSchema, type EditMemberInput, type TeamMember } from '../types/member'
@@ -11,6 +13,7 @@ interface EditMemberDialogProps {
 }
 
 export function EditMemberDialog({ member, onClose }: EditMemberDialogProps) {
+  const [showPassword, setShowPassword] = useState(false)
   const { mutate, isPending, error } = useUpdateMember()
   const {
     handleSubmit,
@@ -19,7 +22,7 @@ export function EditMemberDialog({ member, onClose }: EditMemberDialogProps) {
     formState: { errors },
   } = useForm<EditMemberInput>({
     resolver: zodResolver(editMemberSchema),
-    defaultValues: { name: member.name, role: member.role, phone: member.phone },
+    defaultValues: { name: member.name, role: member.role, phone: member.phone, password: '' },
   })
 
   const onSubmit = (input: EditMemberInput) => {
@@ -40,7 +43,7 @@ export function EditMemberDialog({ member, onClose }: EditMemberDialogProps) {
           className="mb-1 w-full rounded-md border border-border px-3 py-2 text-sm font-semibold text-ink focus:border-sage focus:outline-none"
           {...register('name')}
         />
-        <p className="mb-2 text-xs text-danger">{errors.name?.message ?? ' '}</p>
+        <p className="mb-2 text-xs text-danger">{errors.name?.message ?? ' '}</p>
 
         <Controller
           control={control}
@@ -75,6 +78,31 @@ export function EditMemberDialog({ member, onClose }: EditMemberDialogProps) {
           className="mb-3 w-full rounded-md border border-border px-3 py-2 text-sm focus:border-sage focus:outline-none"
           {...register('phone')}
         />
+
+        <label className="mb-1 block text-xs font-medium text-muted" htmlFor="password">
+          Neues Passwort
+        </label>
+        <div className="relative mb-1">
+          <input
+            id="password"
+            type={showPassword ? 'text' : 'password'}
+            autoComplete="new-password"
+            placeholder="Leer lassen, um das Passwort nicht zu ändern"
+            className="w-full rounded-md border border-border px-3 py-2 pr-9 text-sm focus:border-sage focus:outline-none"
+            {...register('password')}
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword((v) => !v)}
+            tabIndex={-1}
+            title={showPassword ? 'Passwort verbergen' : 'Passwort anzeigen'}
+            aria-label={showPassword ? 'Passwort verbergen' : 'Passwort anzeigen'}
+            className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer text-muted hover:text-sage-deep"
+          >
+            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+          </button>
+        </div>
+        <p className="mb-2 text-xs text-danger">{errors.password?.message ?? ' '}</p>
 
         {error && (
           <p className="mb-2 text-xs text-danger">Änderung konnte nicht gespeichert werden.</p>

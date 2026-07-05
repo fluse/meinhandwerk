@@ -3,6 +3,7 @@ import { AppLayout } from '@/core/layout/AppLayout'
 import { SettingsLayout } from '@/core/layout/SettingsLayout'
 import { LoginPage } from '@/features/auth/pages/LoginPage'
 import { TeamPage } from '@/features/team/pages/TeamPage'
+import { GeneralSettingsPage } from '@/features/settings/pages/GeneralSettingsPage'
 import { WeekPage } from '@/features/scheduling/pages/WeekPage'
 import { EmployeeWeekPage } from '@/features/scheduling/pages/EmployeeWeekPage'
 import { DayPage } from '@/features/scheduling/pages/DayPage'
@@ -51,7 +52,8 @@ export const router = createBrowserRouter([
                 path: 'settings',
                 element: <SettingsLayout />,
                 children: [
-                  { index: true, element: <Navigate to="team" replace /> },
+                  { index: true, element: <Navigate to="general" replace /> },
+                  { path: 'general', element: <GeneralSettingsPage /> },
                   { path: 'team', element: <TeamPage /> },
                   { path: 'vehicles', element: <VehicleSettingsPage /> },
                 ],

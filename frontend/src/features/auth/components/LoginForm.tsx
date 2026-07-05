@@ -31,7 +31,7 @@ export function LoginForm({ onSuccess }: { onSuccess: () => void }) {
             id="email"
             type="email"
             autoComplete="email"
-            placeholder="name@firma.de"
+            placeholder="E-Mail Adresse"
             className="w-full rounded-lg border border-border bg-page/40 py-2.5 pr-3 pl-9 text-sm text-ink placeholder:text-muted focus:border-sage focus:bg-card focus:ring-4 focus:ring-sage/15 focus:outline-none"
             {...register('email')}
           />

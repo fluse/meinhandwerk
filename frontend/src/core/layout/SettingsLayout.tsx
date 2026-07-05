@@ -1,6 +1,7 @@
 import { NavLink, Outlet } from 'react-router-dom'
 
 const TABS = [
+  { to: '/settings/general', label: 'Allgemein' },
   { to: '/settings/team', label: 'Team' },
   { to: '/settings/vehicles', label: 'Fahrzeuge' },
 ]
