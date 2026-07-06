@@ -128,7 +128,7 @@ export function DayBoardPage() {
                     to={`/week/${m.id}?week=${week}`}
                     className="flex flex-col items-center gap-1 text-white no-underline"
                   >
-                    <span className="text-center text-xs font-bold leading-tight">{m.name}</span>
+                    <span className="text-left text-xs font-bold leading-tight">{m.name}</span>
                   </Link>
                   {canPlan && (
                     <Link

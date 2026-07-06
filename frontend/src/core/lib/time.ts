@@ -1,4 +1,4 @@
-export const WD = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa']
+export const WD = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']
 
 /** Zeitstrahl-Grenzen für die Tagesansichten: 06:00–21:30, 46px pro Stunde. */
 export const DAY_START_HOUR = 6

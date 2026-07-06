@@ -41,7 +41,7 @@ export const router = createBrowserRouter([
             children: [
               { index: true, element: <HomePage /> },
               { path: 'schedule', element: <DayBoardPage />, handle: { fullBleed: true } },
-              { path: 'week', element: <WeekPage /> },
+              { path: 'week', element: <WeekPage />, handle: { fullBleed: true } },
               { path: 'week/:userId', element: <EmployeeWeekPage /> },
               { path: 'auftraege', element: <OrdersListPage /> },
               { path: 'customers', element: <CustomersPage /> },

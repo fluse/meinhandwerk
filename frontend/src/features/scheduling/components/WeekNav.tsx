@@ -4,9 +4,10 @@ import { addDays, fmtShort, kw, mondayOf } from '@/core/lib/date'
 interface WeekNavProps {
   weekStart: Date
   onChange: (d: Date) => void
+  days?: number
 }
 
-export function WeekNav({ weekStart, onChange }: WeekNavProps) {
+export function WeekNav({ weekStart, onChange, days = 6 }: WeekNavProps) {
   return (
     <div className="sticky top-0 z-10 flex items-center gap-2 border-b border-border bg-card px-3.5 py-2.5">
       <button
@@ -19,7 +20,7 @@ export function WeekNav({ weekStart, onChange }: WeekNavProps) {
       <div className="flex-1 text-center">
         <div className="text-sm font-extrabold text-ink">KW {kw(weekStart)}</div>
         <div className="text-xs text-muted">
-          {fmtShort(weekStart)}–{fmtShort(addDays(weekStart, 5))}
+          {fmtShort(weekStart)}–{fmtShort(addDays(weekStart, days - 1))}
         </div>
       </div>
       <button
