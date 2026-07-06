@@ -151,10 +151,10 @@ export function VehicleCard({
                 placeholder="Adresse eingeben"
                 className="mb-2 w-full rounded-md border border-border px-3 py-2 text-sm focus:border-sage focus:outline-none"
               />
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-col gap-2">
                 <Button
                   variant="secondary"
-                  className="flex-1"
+                  className="w-full"
                   disabled={updateLocation.isPending}
                   onClick={geocode}
                 >
@@ -162,7 +162,7 @@ export function VehicleCard({
                 </Button>
                 <Button
                   variant="secondary"
-                  className="flex-1"
+                  className="w-full"
                   disabled={updateLocation.isPending}
                   onClick={useMyLocation}
                 >

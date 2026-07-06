@@ -63,7 +63,7 @@ export function AppLayout() {
           </div>
         )}
       </header>
-      <main className={fullBleed ? 'flex-1' : 'flex-1 p-4 sm:p-6'}>
+      <main className={fullBleed ? 'min-w-0 flex-1' : 'min-w-0 flex-1 p-4 sm:p-6'}>
         <Outlet />
       </main>
       <BottomNav />
