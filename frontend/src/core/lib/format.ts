@@ -1,7 +1,5 @@
 export function surname(name?: string): string {
-  if (!name) return ''
-  const parts = name.trim().split(/\s+/)
-  return parts[parts.length - 1]
+  return name ? name.trim() : ''
 }
 
 export function shortAddr(address?: string): string {

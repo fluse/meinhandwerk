@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { CalendarRange, ListChecks, Lock, Plus } from 'lucide-react'
 import { useAuth } from '@/core/auth/AuthProvider'
@@ -61,6 +61,19 @@ export function DayBoardPage() {
     return { member: m, hidden, noTime, timeline }
   })
   const anyNoTime = columns.some((c) => c.noTime.length > 0)
+
+  const timelineRowRef = useRef<HTMLDivElement>(null)
+  const [timelineWidth, setTimelineWidth] = useState(0)
+
+  useLayoutEffect(() => {
+    const el = timelineRowRef.current
+    if (!el) return
+    const measure = () => setTimelineWidth(el.scrollWidth)
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [columns.length])
 
   return (
     <div className="pb-16">
@@ -155,7 +168,7 @@ export function DayBoardPage() {
             </div>
           )}
 
-          <div className="relative flex">
+          <div className="relative flex" ref={timelineRowRef}>
             <div className="relative w-11 flex-none" style={{ height: COLUMN_HEIGHT }}>
               <div className="relative" style={{ top: TIMELINE_PAD, height: TOTAL_HEIGHT }}>
                 {hours.map((h) => (
@@ -217,8 +230,8 @@ export function DayBoardPage() {
             )}
             {isToday && nowHour >= H0 && nowHour <= H1 && (
               <div
-                className="pointer-events-none absolute inset-x-0 z-10 border-t-2 border-danger"
-                style={{ top: (nowHour - H0) * PPH + TIMELINE_PAD }}
+                className="pointer-events-none absolute left-0 z-10 border-t-2 border-danger"
+                style={{ top: (nowHour - H0) * PPH + TIMELINE_PAD, width: timelineWidth || '100%' }}
               >
                 <span className="absolute -top-2 left-1 rounded bg-danger px-1 text-[9px] font-bold text-white">
                   {formatHour(nowHour, H0, H1)}

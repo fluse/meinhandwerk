@@ -1,8 +1,8 @@
 export const WD = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa']
 
-/** Zeitstrahl-Grenzen für die Tagesansichten: 06:00–20:00, 46px pro Stunde. */
+/** Zeitstrahl-Grenzen für die Tagesansichten: 06:00–21:30, 46px pro Stunde. */
 export const DAY_START_HOUR = 6
-export const DAY_END_HOUR = 20
+export const DAY_END_HOUR = 21.5
 export const PIXELS_PER_HOUR = 46
 
 /** Formatiert eine Stunden-Fließkommazahl (z. B. 8.5) als "HH:MM", begrenzt auf [h0, h1]. */
@@ -31,6 +31,8 @@ export function hoursBetween(von?: string, bis?: string): number {
 export function blockOf(from?: string): number {
   if (!from) return -1
   const h = parseInt(from.slice(0, 2), 10)
-  if (h < 6 || h >= 20) return -1
-  return Math.min(6, Math.floor((h - 6) / 2))
+  const m = parseInt(from.slice(3, 5), 10) || 0
+  const hourValue = h + m / 60
+  if (hourValue < DAY_START_HOUR || hourValue >= DAY_END_HOUR) return -1
+  return Math.min(6, Math.floor((h - DAY_START_HOUR) / 2))
 }
