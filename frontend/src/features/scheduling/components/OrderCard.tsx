@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import {
   Bell,
   Check,
@@ -22,6 +22,7 @@ import { Button } from '@/core/components/Button'
 import { ConfirmDialog } from '@/core/components/ConfirmDialog'
 import { DetailRow } from '@/core/components/DetailRow'
 import { MapsAppDialog } from '@/core/components/MapsAppDialog'
+import { Overlay } from '@/core/components/Overlay'
 import type { RosterMember } from '@/core/api/roster'
 import { useOrderPhotos, useUploadOrderPhoto, useDeleteOrderPhoto } from '../hooks/useOrderPhotos'
 import { useMarkOrderRead, useOrderReads } from '../hooks/useOrderReads'
@@ -35,6 +36,26 @@ import { StatusPill } from './StatusPill'
 // feature-meldungen.md) – sonst würde er den Mitarbeiter direkt nach dem Losfahren stören.
 const ARRIVAL_PROMPT_DELAY_MS = 60 * 60 * 1000
 
+/** Zeigt die Auftragsdetails inline (Standard) oder als Bottom-Sheet (Startseite) an. */
+function OrderDetails({
+  sheet,
+  onClose,
+  children,
+}: {
+  sheet: boolean
+  onClose: () => void
+  children: ReactNode
+}) {
+  if (sheet) {
+    return (
+      <Overlay variant="sheet" responsive onBackdropClick={onClose} onClose={onClose}>
+        {children}
+      </Overlay>
+    )
+  }
+  return <div className="px-3.5 pb-4">{children}</div>
+}
+
 interface OrderCardProps {
   order: Order
   roster: RosterMember[]
@@ -47,6 +68,8 @@ interface OrderCardProps {
   onNotify: () => void
   onComplete: () => void
   onRapport: () => void
+  /** Zeigt die Details statt inline aufgeklappt in einem Bottom-Sheet an. */
+  sheet?: boolean
 }
 
 export function OrderCard({
@@ -61,6 +84,7 @@ export function OrderCard({
   onNotify,
   onComplete,
   onRapport,
+  sheet = false,
 }: OrderCardProps) {
   const nameById = Object.fromEntries(roster.map((m) => [m.id, m.name]))
   const assignedNames = order.assigned.map((id) => nameById[id] ?? id)
@@ -173,7 +197,7 @@ export function OrderCard({
       </button>
 
       {isOpen && (
-        <div className="px-3.5 pb-4">
+        <OrderDetails sheet={sheet} onClose={onToggle}>
           <div className="mb-2 text-base font-extrabold">{order.title}</div>
           <div className="rounded-lg border border-border bg-page px-3">
             <DetailRow
@@ -363,6 +387,7 @@ export function OrderCard({
                   </Button>
                 </div>
               )}
+              <hr className="border-slate-300 my-4" />
               <div className="mt-2 flex gap-2">
                 <Button variant="secondary" className="flex-1" onClick={onEdit}>
                   Bearbeiten
@@ -378,7 +403,7 @@ export function OrderCard({
               </div>
             </>
           )}
-        </div>
+        </OrderDetails>
       )}
 
       <ConfirmDialog

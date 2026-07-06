@@ -43,7 +43,7 @@ export function PostComposer({ onClose }: PostComposerProps) {
   }
 
   return (
-    <Overlay variant="sheet">
+    <Overlay variant="sheet" onClose={onClose}>
       <h2 className="mb-3.5 text-lg font-extrabold text-ink">Beitrag erstellen</h2>
       <textarea
         value={text}

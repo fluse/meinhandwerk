@@ -82,6 +82,7 @@ export function HomePage() {
           onNotify={() => setNotifyOrder(o)}
           onComplete={() => setCompleteOrder(o)}
           onRapport={() => navigate(`/orders/${o.id}/rapports`)}
+          sheet
         />
       ))
     )
@@ -109,7 +110,7 @@ export function HomePage() {
   const assignVehicle = useAssignVehicle()
 
   return (
-    <div className="mx-auto max-w-lg pb-16">
+    <div className="mx-auto max-w-lg">
       <h1 className="mb-1 text-lg font-bold text-ink">Hallo{user?.name ? `, ${user.name}` : ''}</h1>
       <p className="mb-4 text-sm text-muted capitalize">{fmtLong(today)}</p>
 

@@ -40,7 +40,13 @@ export function NotificationBell() {
         )}
       </button>
 
-      <Overlay open={open} variant="sheet" responsive onBackdropClick={() => setOpen(false)}>
+      <Overlay
+        open={open}
+        variant="sheet"
+        responsive
+        onBackdropClick={() => setOpen(false)}
+        onClose={() => setOpen(false)}
+      >
         <h2 className="text-base font-semibold text-ink">Meldungen</h2>
         <div className="mt-4 flex max-h-[60vh] flex-col gap-2 overflow-y-auto">
           {unread.length === 0 ? (

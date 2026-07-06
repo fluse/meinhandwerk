@@ -28,7 +28,7 @@ export function NotifySheet({ order, members, onClose }: NotifySheetProps) {
   }
 
   return (
-    <Overlay variant="sheet">
+    <Overlay variant="sheet" onClose={onClose}>
       <h2 className="mb-2.5 text-lg font-extrabold text-ink">Mitarbeiter benachrichtigen</h2>
       <div className="mb-3 whitespace-pre-wrap rounded-lg border border-border bg-page p-3 text-sm leading-relaxed">
         {msg}

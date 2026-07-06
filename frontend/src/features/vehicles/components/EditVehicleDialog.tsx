@@ -26,7 +26,7 @@ export function EditVehicleDialog({ vehicle, onClose }: EditVehicleDialogProps) 
   }
 
   return (
-    <Overlay onSubmit={handleSubmit(onSubmit)}>
+    <Overlay onSubmit={handleSubmit(onSubmit)} onClose={onClose}>
       <label className="mb-1 block text-xs font-medium text-muted" htmlFor="name">
         Name
       </label>

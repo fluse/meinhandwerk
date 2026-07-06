@@ -21,7 +21,7 @@ export function ConfirmDialog({
   onCancel,
 }: ConfirmDialogProps) {
   return (
-    <Overlay open={open}>
+    <Overlay open={open} onClose={onCancel}>
       <h2 className="text-base font-semibold text-ink">{title}</h2>
       {description && <p className="mt-2 text-sm text-muted">{description}</p>}
       <div className="mt-5 flex justify-end gap-2">

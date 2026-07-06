@@ -32,7 +32,7 @@ export function EditSiteDialog({ site, onClose }: EditSiteDialogProps) {
   }
 
   return (
-    <Overlay onSubmit={handleSubmit(onSubmit)}>
+    <Overlay onSubmit={handleSubmit(onSubmit)} onClose={onClose}>
       <label className="mb-1 block text-xs font-medium text-muted" htmlFor="label">
         Bezeichnung
       </label>

@@ -45,7 +45,7 @@ export function MapsAppDialog({ open, target, onClose }: MapsAppDialogProps) {
   }
 
   return (
-    <Overlay open={open}>
+    <Overlay open={open} onClose={onClose}>
       <h2 className="text-base font-semibold text-ink">Navigation öffnen mit</h2>
       <div className="mt-5 flex flex-col gap-2">
         <Button

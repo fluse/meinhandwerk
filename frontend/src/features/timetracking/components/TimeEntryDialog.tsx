@@ -112,7 +112,7 @@ export function TimeEntryDialog({
   const isPending = create.isPending || update.isPending
 
   return (
-    <Overlay variant="sheet">
+    <Overlay variant="sheet" onClose={onClose}>
       <h2 className="mb-3.5 text-lg font-extrabold text-ink">Stunden erfassen</h2>
 
       {canPlan ? (

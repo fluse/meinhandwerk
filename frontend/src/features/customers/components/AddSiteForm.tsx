@@ -45,7 +45,11 @@ export function AddSiteForm({ customerId }: { customerId: string }) {
   }
 
   return (
-    <Overlay onSubmit={handleSubmit(onSubmit)} panelClassName="flex flex-col gap-2">
+    <Overlay
+      onSubmit={handleSubmit(onSubmit)}
+      onClose={() => setOpen(false)}
+      panelClassName="flex flex-col gap-2"
+    >
       <div className="mb-1 text-sm font-extrabold text-sage-deep">Baustelle hinzufügen</div>
 
       <input placeholder="Bezeichnung (optional)" className={fieldClass} {...register('label')} />

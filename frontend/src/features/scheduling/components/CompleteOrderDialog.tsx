@@ -53,7 +53,7 @@ export function CompleteOrderDialog({ order, currentUserId, onClose }: CompleteO
   }
 
   return (
-    <Overlay variant="sheet">
+    <Overlay variant="sheet" onClose={onClose}>
       <h2 className="mb-0.5 text-lg font-extrabold text-ink">Auftrag abschließen</h2>
       <p className="mb-4 text-sm text-muted">
         {order.title} · {surname(order.client)}
