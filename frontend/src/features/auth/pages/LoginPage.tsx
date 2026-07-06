@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { HardHat } from 'lucide-react'
 import { useCompanySettings } from '@/features/settings/hooks/useCompanySettings'
+import { InstallAppSection } from '@/core/components/InstallAppSection'
 import { LoginForm } from '../components/LoginForm'
 
 export function LoginPage() {
@@ -35,6 +36,10 @@ export function LoginPage() {
 
         <div className="mt-7 w-full rounded-2xl border border-border bg-card p-6 shadow-lg shadow-black/[0.03] sm:p-7">
           <LoginForm onSuccess={() => navigate('/', { replace: true })} />
+        </div>
+
+        <div className="mt-4 w-full">
+          <InstallAppSection />
         </div>
       </div>
     </div>
