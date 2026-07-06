@@ -1,5 +1,5 @@
 import { LogOut, Settings } from 'lucide-react'
-import { Link, Outlet, useMatches, useNavigate } from 'react-router-dom'
+import { Link, Outlet, useLocation, useMatches, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/core/auth/AuthProvider'
 import { useCompanySettings } from '@/features/settings/hooks/useCompanySettings'
 import { NotificationBell } from '@/features/notifications/components/NotificationBell'
@@ -12,7 +12,9 @@ export function AppLayout() {
   const { data: companySettings } = useCompanySettings()
   const navigate = useNavigate()
   const matches = useMatches()
+  const { pathname } = useLocation()
   const fullBleed = matches.some((match) => (match.handle as RouteHandle | undefined)?.fullBleed)
+  const settingsActive = pathname.startsWith('/settings')
 
   const handleLogout = () => {
     logout()
@@ -43,9 +45,12 @@ export function AppLayout() {
                 to="/settings"
                 title="Einstellungen"
                 aria-label="Einstellungen"
-                className="text-sage-deep"
+                aria-current={settingsActive ? 'page' : undefined}
+                className={`-m-1.5 rounded-full p-1.5 text-sage-deep transition-colors ${
+                  settingsActive ? 'bg-page' : ''
+                }`}
               >
-                <Settings size={20} />
+                <Settings size={20} strokeWidth={settingsActive ? 2.2 : 1.8} />
               </Link>
             )}
             <span className="hidden max-w-[40vw] truncate text-sm text-muted sm:inline">
