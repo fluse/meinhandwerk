@@ -4,6 +4,7 @@ import { Button } from '@/core/components/Button'
 import { DetailRow } from '@/core/components/DetailRow'
 import { ConfirmDialog } from '@/core/components/ConfirmDialog'
 import { MapsAppDialog } from '@/core/components/MapsAppDialog'
+import { colorVar } from '@/core/lib/cssVar'
 import { geocodeAddress } from '@/core/api/geocoding'
 import { useAssignVehicle, useUpdateVehicleLocation } from '../hooks/useVehicleMutations'
 import type { Vehicle } from '../types/vehicle'
@@ -71,7 +72,18 @@ export function VehicleCard({
           {v.name.slice(0, 1).toUpperCase()}
         </div>
         <div className="min-w-0 flex-1">
-          <div className="truncate text-sm font-bold text-ink">{v.name}</div>
+          <div className="flex items-center gap-2">
+            <div className="truncate text-sm font-bold text-ink">{v.name}</div>
+            <span
+              className="flex-none whitespace-nowrap rounded-full px-2 py-0.5 text-[11px] font-bold"
+              style={{
+                background: colorVar(isFree ? 'status-erledigt-bg' : 'status-offen-bg'),
+                color: colorVar(isFree ? 'status-erledigt-fg' : 'status-offen-fg'),
+              }}
+            >
+              {isFree ? 'Frei' : 'Besetzt'}
+            </span>
+          </div>
           <div className="truncate text-xs text-muted">
             {v.assignedToName ? `Bei ${v.assignedToName}` : 'Nicht zugeordnet'}
             {v.plate ? ` · ${v.plate}` : ''}

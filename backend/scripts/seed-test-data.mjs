@@ -74,10 +74,46 @@ async function main() {
   const today = new Date()
 
   // 2) Team – bestehende Nutzer wiederverwenden, fehlende Rollen ergänzen.
+  // Es gibt bewusst keinen In-App-Signup (users.createRule verlangt bereits chef/büro) –
+  // auf einer frischen Datenbank existiert daher noch kein "chef". Das Skript legt genau wie
+  // Büro/Helfer per Superuser-Token auch Chef und Monteure an, damit es allein lauffähig ist.
   const existingUsers = await pb('/api/collections/users/records?perPage=200')
   const byEmail = Object.fromEntries(existingUsers.items.map((u) => [u.email, u]))
-  const chef = existingUsers.items.find((u) => u.role === 'chef')
-  const monteure = existingUsers.items.filter((u) => u.role === 'monteur')
+
+  const chef =
+    existingUsers.items.find((u) => u.role === 'chef') ??
+    (await ensureOne('users', 'email = "hans.hahn@test.local"', {
+      name: 'Hans Hahn',
+      email: 'hans.hahn@test.local',
+      password: TEST_PASSWORD,
+      passwordConfirm: TEST_PASSWORD,
+      role: 'chef',
+      phone: '0171 1112223',
+      emailVisibility: true,
+    }))
+
+  let monteure = existingUsers.items.filter((u) => u.role === 'monteur')
+  if (monteure.length === 0) {
+    const monteur1 = await ensureOne('users', 'email = "stefan.wolf@test.local"', {
+      name: 'Stefan Wolf',
+      email: 'stefan.wolf@test.local',
+      password: TEST_PASSWORD,
+      passwordConfirm: TEST_PASSWORD,
+      role: 'monteur',
+      phone: '0171 3334445',
+      emailVisibility: true,
+    })
+    const monteur2 = await ensureOne('users', 'email = "thomas.becker@test.local"', {
+      name: 'Thomas Becker',
+      email: 'thomas.becker@test.local',
+      password: TEST_PASSWORD,
+      passwordConfirm: TEST_PASSWORD,
+      role: 'monteur',
+      phone: '0171 5556667',
+      emailVisibility: true,
+    })
+    monteure = [monteur1, monteur2]
+  }
 
   const buero =
     byEmail['sabine.lehmann@test.local'] ??
@@ -144,13 +180,40 @@ async function main() {
       phone: '0711 1122334',
       email: 'info@gasthaus-sonne.test',
     },
+    {
+      name: 'Bäckerei Klein',
+      contact: 'Michael Klein',
+      street: 'Bahnhofstraße 22',
+      zip: '50667',
+      city: 'Köln',
+      phone: '0221 7788990',
+      email: 'info@baeckerei-klein.test',
+    },
+    {
+      name: 'Zahnarztpraxis Dr. König',
+      contact: 'Dr. Julia König',
+      street: 'Lindenallee 9',
+      zip: '40210',
+      city: 'Düsseldorf',
+      phone: '0211 5544332',
+      email: 'praxis@dr-koenig.test',
+    },
+    {
+      name: 'Hotel Rheinblick',
+      contact: 'Sandra Vogel',
+      street: 'Rheinuferweg 8',
+      zip: '76133',
+      city: 'Karlsruhe',
+      phone: '0721 3344556',
+      email: 'technik@hotel-rheinblick.test',
+    },
   ]) {
     const key = c.name || c.contact
     const filterName = (c.name || c.contact).replace(/"/g, '\\"')
     customers[key] = await ensureOne('customers', `name = "${filterName}" || contact = "${filterName}"`, c)
   }
 
-  // 4) Fahrzeuge – bestehende bleiben unangetastet, zwei weitere ergänzen.
+  // 4) Fahrzeuge – bestehende bleiben unangetastet, weitere ergänzen.
   await ensureOne('vehicles', 'name = "Mercedes Sprinter"', {
     name: 'Mercedes Sprinter',
     plate: 'XX-YY 123',
@@ -162,6 +225,18 @@ async function main() {
     plate: 'XX-ZZ 456',
     assignedTo: m2?.id ?? '',
     notes: 'Testdaten',
+  })
+  await ensureOne('vehicles', 'name = "VW Caddy"', {
+    name: 'VW Caddy',
+    plate: 'XX-AB 789',
+    assignedTo: helfer?.id ?? '',
+    notes: 'Kleintransporter für kurze Wege, Testdaten.',
+  })
+  await ensureOne('vehicles', 'name = "Iveco Daily"', {
+    name: 'Iveco Daily',
+    plate: 'XX-CD 321',
+    assignedTo: '',
+    notes: 'Aktuell keinem Mitarbeiter zugeordnet – Testfall für freies Fahrzeug.',
   })
 
   // 5) Projekte
@@ -306,7 +381,7 @@ async function main() {
     note: 'Ohne feste Uhrzeit.',
     assigned: [m1?.id].filter(Boolean),
   }))
-  await ensureOne('orders', 'title = "Heizung Frühjahrscheck"', ORD({
+  const heizungFruehjahrscheck = await ensureOne('orders', 'title = "Heizung Frühjahrscheck"', ORD({
     title: 'Heizung Frühjahrscheck',
     trade: 'heizung',
     date: iso(addDays(today, -1)),
@@ -320,7 +395,7 @@ async function main() {
     closedAt: new Date().toISOString(),
     rapportSigned: true,
   }))
-  await ensureOne('orders', 'title = "Rohrbruch Notdienst"', ORD({
+  const rohrbruchNotdienst = await ensureOne('orders', 'title = "Rohrbruch Notdienst"', ORD({
     title: 'Rohrbruch Notdienst',
     trade: 'sanitaer',
     date: iso(addDays(today, -1)),
@@ -335,7 +410,7 @@ async function main() {
     rapportSigned: false,
     rapportReason: 'Kunde bei Abholung nicht anwesend.',
   }))
-  await ensureOne('orders', 'title = "Klimaanlage Endreinigung"', ORD({
+  const klimaanlageEndreinigung = await ensureOne('orders', 'title = "Klimaanlage Endreinigung"', ORD({
     title: 'Klimaanlage Endreinigung',
     trade: 'klima',
     date: iso(addDays(today, -2)),
@@ -349,6 +424,148 @@ async function main() {
     closedAt: new Date().toISOString(),
     rapportSigned: true,
   }))
+
+  // Weitere Aufträge: mehr Kunden/Gewerke abgedeckt (u. a. "urlaub"/"krank" als Ganztagestermine),
+  // mehr abgeschlossene Aufträge mit Rapport für die Rapport-Übersicht.
+  await ensureOne('orders', 'title = "Backofen-Wartung Bäckerei Klein"', ORD({
+    title: 'Backofen-Wartung Bäckerei Klein',
+    trade: 'elektro',
+    date: iso(addDays(today, 3)),
+    from: '06:00',
+    to: '08:00',
+    client: 'Bäckerei Klein',
+    phone: '0221 7788990',
+    address: 'Bahnhofstraße 22, 50667 Köln',
+    desc: 'Jährliche E-Check-Wartung der Backöfen.',
+    assigned: [m2?.id].filter(Boolean),
+  }))
+  await ensureOne('orders', 'title = "Druckluftinstallation Zahnarztpraxis König"', ORD({
+    title: 'Druckluftinstallation Zahnarztpraxis König',
+    trade: 'innenausbau',
+    date: iso(addDays(today, 4)),
+    from: '14:00',
+    to: '17:00',
+    client: 'Zahnarztpraxis Dr. König',
+    phone: '0211 5544332',
+    address: 'Lindenallee 9, 40210 Düsseldorf',
+    assigned: [m1?.id, helfer?.id].filter(Boolean),
+  }))
+  await ensureOne('orders', 'title = "Klimaanlage Hotel Rheinblick"', ORD({
+    title: 'Klimaanlage Hotel Rheinblick',
+    trade: 'klima',
+    date: iso(addDays(today, 6)),
+    client: 'Hotel Rheinblick',
+    phone: '0721 3344556',
+    address: 'Rheinuferweg 8, 76133 Karlsruhe',
+    note: 'Ohne feste Uhrzeit – nach Absprache mit der Rezeption.',
+    assigned: [m2?.id].filter(Boolean),
+  }))
+  if (m1) {
+    await ensureOne('orders', `title = "Urlaub ${m1.name}"`, ORD({
+      title: `Urlaub ${m1.name}`,
+      trade: 'urlaub',
+      date: iso(addDays(today, 7)),
+      assigned: [m1.id],
+      note: 'Ganztägig, keine Einsatzadresse.',
+    }))
+  }
+  if (m2) {
+    await ensureOne('orders', `title = "Krank ${m2.name}"`, ORD({
+      title: `Krank ${m2.name}`,
+      trade: 'krank',
+      date: iso(today),
+      assigned: [m2.id],
+    }))
+  }
+  await ensureOne('orders', 'title = "Wartung Sanitäranlagen Hotel Rheinblick"', ORD({
+    title: 'Wartung Sanitäranlagen Hotel Rheinblick',
+    trade: 'sanitaer',
+    date: iso(addDays(today, -3)),
+    from: '07:00',
+    to: '11:00',
+    client: 'Hotel Rheinblick',
+    address: 'Rheinuferweg 8, 76133 Karlsruhe',
+    assigned: [m2?.id].filter(Boolean),
+    status: 'erledigt',
+    closedBy: m2?.id ?? '',
+    closedAt: new Date().toISOString(),
+    rapportSigned: true,
+  }))
+  const backofenReparaturKlein = await ensureOne('orders', 'title = "Backofen-Reparatur Bäckerei Klein"', ORD({
+    title: 'Backofen-Reparatur Bäckerei Klein',
+    trade: 'elektro',
+    date: iso(addDays(today, -4)),
+    from: '05:00',
+    to: '07:30',
+    client: 'Bäckerei Klein',
+    address: 'Bahnhofstraße 22, 50667 Köln',
+    desc: 'Defekte Heizspirale im Hauptofen ausgetauscht.',
+    assigned: [m1?.id].filter(Boolean),
+    status: 'erledigt',
+    closedBy: m1?.id ?? '',
+    closedAt: new Date().toISOString(),
+    rapportSigned: true,
+  }))
+
+  // 6b) Rapporte – für abgeschlossene Aufträge mit rapportSigned=true, inkl. Materialliste.
+  async function ensureRapport(order, author, data) {
+    if (!order || !author) return null
+    const rapport = await ensureOne('rapports', `order = "${order.id}"`, {
+      order: order.id,
+      author,
+      date: order.date,
+      ...data,
+    })
+    return rapport
+  }
+
+  const rapportFruehjahrscheck = await ensureRapport(heizungFruehjahrscheck, m1?.id, {
+    text: 'Heizungsanlage gewartet, Brenner gereinigt, Ablufttest bestanden. Keine Auffälligkeiten.',
+    signedName: 'Frank Müller',
+  })
+  if (rapportFruehjahrscheck) {
+    await ensureOne('rapport_materials', `rapport = "${rapportFruehjahrscheck.id}" && desc = "Filter"`, {
+      rapport: rapportFruehjahrscheck.id,
+      qty: 2,
+      unit: 'Stk',
+      desc: 'Filter',
+    })
+    await ensureOne('rapport_materials', `rapport = "${rapportFruehjahrscheck.id}" && desc = "Dichtungssatz"`, {
+      rapport: rapportFruehjahrscheck.id,
+      qty: 1,
+      unit: 'Stk',
+      desc: 'Dichtungssatz',
+    })
+  }
+
+  const rapportKlimaEndreinigung = await ensureRapport(klimaanlageEndreinigung, helfer?.id, {
+    text: 'Klimaanlage komplett gereinigt und Filter getauscht, Kunde vor Ort eingewiesen.',
+    signedName: 'Peter Groß',
+  })
+  if (rapportKlimaEndreinigung) {
+    await ensureOne('rapport_materials', `rapport = "${rapportKlimaEndreinigung.id}" && desc = "Klimafilter"`, {
+      rapport: rapportKlimaEndreinigung.id,
+      qty: 4,
+      unit: 'Stk',
+      desc: 'Klimafilter',
+    })
+  }
+
+  const rapportBackofen = await ensureRapport(backofenReparaturKlein, m1?.id, {
+    text: 'Heizspirale im Hauptofen ausgetauscht und Funktion geprüft. Ofen läuft wieder einwandfrei.',
+    signedName: 'Michael Klein',
+  })
+  if (rapportBackofen) {
+    await ensureOne('rapport_materials', `rapport = "${rapportBackofen.id}" && desc = "Heizspirale 3kW"`, {
+      rapport: rapportBackofen.id,
+      qty: 1,
+      unit: 'Stk',
+      desc: 'Heizspirale 3kW',
+    })
+  }
+
+  // Rohrbruch Notdienst (rohrbruchNotdienst) hat bewusst KEIN Rapport (rapportSigned: false,
+  // rapportReason gesetzt) – Testfall für "Rapport fehlt trotz erledigtem Auftrag".
 
   // 7) Events
   if (chef) {
@@ -439,8 +656,13 @@ async function main() {
   })
 
   console.log('\nFertig. Test-Logins (Passwort für alle: ' + TEST_PASSWORD + '):')
-  console.log('  Büro:   sabine.lehmann@test.local')
-  console.log('  Helfer: kevin.fischer@test.local')
+  console.log(`  Chef:    ${chef.email}`)
+  console.log('  Büro:    sabine.lehmann@test.local')
+  console.log(`  Monteur: ${monteure[0]?.email}`)
+  if (monteure[1] && monteure[1].id !== monteure[0]?.id) {
+    console.log(`  Monteur: ${monteure[1].email}`)
+  }
+  console.log('  Helfer:  kevin.fischer@test.local')
   console.log(`\nPocketBase-Adminoberfläche: ${PB_URL}/_/  (Superuser: ${ADMIN_EMAIL})`)
 }
 

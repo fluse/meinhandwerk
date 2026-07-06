@@ -125,7 +125,7 @@ export function HomePage() {
           </>
         )}
       </Section>
-
+      <hr className="border-slate-300 my-2" />
       <Section title="Fahrzeuge" action={{ label: 'Alle Fahrzeuge', to: '/vehicles' }}>
         {myVehicle ? (
           <div className="mb-2.5 flex items-center justify-between gap-2 rounded-xl border border-border bg-card p-3.5">
@@ -170,7 +170,7 @@ export function HomePage() {
           <p className="text-sm text-muted">Kein Fahrzeug zugeordnet, aktuell auch keine frei.</p>
         )}
       </Section>
-
+      <hr className="border-slate-300 my-2" />
       <Section title="Events heute" action={{ label: 'Alle Events', to: '/events' }}>
         {todaysEvents.length === 0 ? (
           <p className="text-sm text-muted">Keine Events heute.</p>
@@ -187,7 +187,7 @@ export function HomePage() {
           ))
         )}
       </Section>
-
+      <hr className="border-slate-300 my-2" />
       <Section title="Pinnwand" action={{ label: 'Zur Pinnwand', to: '/pinboard' }}>
         {relevantPosts.length === 0 ? (
           <p className="text-sm text-muted">Nichts Neues auf der Pinnwand.</p>
