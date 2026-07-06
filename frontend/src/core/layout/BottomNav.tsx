@@ -96,13 +96,10 @@ export function BottomNav() {
       <Overlay
         open={moreOpen}
         variant="sheet"
-        bare
-        panelClassName="w-full max-w-lg rounded-t-2xl bg-card p-5"
         panelStyle={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 1.25rem)' }}
         onBackdropClick={() => setMoreOpen(false)}
         onClose={() => setMoreOpen(false)}
       >
-        <div className="mx-auto mb-3.5 h-1 w-10 rounded-full bg-border" />
         <div className="grid grid-cols-3 gap-2.5">
           {moreTabs.map((tab) => {
             const active = tab.match(pathname)
